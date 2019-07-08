@@ -32,11 +32,9 @@ app.get("/urls/:shortURL", (req, res) => {
 
 // Generate new random shortURL string upon form entry and update database with short and long URL
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
   res.statusCode = 200;
   const newShortUrl = generateRandomString();
   urlDatabase[newShortUrl] = req.body.longURL;
-  console.log(urlDatabase);
   res.redirect(`/urls/${newShortUrl}`);
 });
 
@@ -44,6 +42,11 @@ app.post("/urls", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
+});
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect(`/urls`);
 });
 
 app.listen(PORT, () => {
