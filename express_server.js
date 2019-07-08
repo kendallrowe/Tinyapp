@@ -30,10 +30,7 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
-
+// Generate new random shortURL string upon form entry and update database with short and long URL
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   res.statusCode = 200;
@@ -43,6 +40,7 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${newShortUrl}`);
 });
 
+// Redirection for shortURL to access a long URL
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
@@ -52,12 +50,13 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-function generateRandomString() {
+// Helper function to generate a random string of 6 characters for short URL
+const generateRandomString = function() {
   const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
   let result           = '';
-  for ( let i = 0; i < 5; i++ ) {
+  for (let i = 0; i < 5; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
+};
