@@ -20,21 +20,21 @@ app.get("/", (req, res) => {
 
 // Take login username and store in cookie if user doesn't already have a username as cookie
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username)
+  res.cookie("username", req.body.username);
   res.redirect("/urls");
 });
 
 // If cookie for username already exists, provide logout screen to logout
 app.post("/logout", (req, res) => {
   delete res.clearCookie("username");
-  res.redirect("/urls")
-}); 
+  res.redirect("/urls");
+});
 
 app.get("/urls", (req, res) => {
-  let templateVars = { 
+  let templateVars = {
     username: req.cookies.username,
     urls: urlDatabase
-   };
+  };
   res.render("urls_index", templateVars);
 });
 
@@ -46,10 +46,10 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { 
+  let templateVars = {
     username: req.cookies.username,
-    shortURL: req.params.shortURL, 
-    longURL: urlDatabase[req.params.shortURL] 
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL]
   };
   res.render("urls_show", templateVars);
 });
