@@ -1,7 +1,7 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const { urlDatabase, users } = require("./constants");
-const { newUser, generateRandomString } = require("./helpers");
+const { newUser, generateRandomString, emailAlreadyExists } = require("./helpers");
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -25,7 +25,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   // Random id generated using same random string function
   let userID = newUser();
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.email || !req.body.password || emailAlreadyExists(userID, req.body.email) === true) {
     res.statusCode = 400;
     return res.send("Missing password or username");
   } else {
