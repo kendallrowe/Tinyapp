@@ -57,7 +57,7 @@ app.get("/urls/:shortURL", (req, res) => {
 // Generate new random shortURL string upon form entry and update database with short and long URL
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
-  const newShortUrl = generateRandomString();
+  const newShortUrl = generateRandomString(0);
   urlDatabase[newShortUrl] = req.body.longURL;
   res.redirect(`/urls/${newShortUrl}`);
 });
@@ -90,12 +90,19 @@ app.listen(PORT, () => {
 });
 
 // Helper function to generate a random string of 6 characters for short URL
-const generateRandomString = function() {
+const generateRandomString = function(n) {
+  n += 1;
   const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
   let result           = '';
   for (let i = 0; i < 5; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  // If the randomly created string already exists, recurse to generate a new random string. Will only attempt max 1000 times. 
+  // If 1000 is exceeded, will overwrite one of the strings (for larger userbase would need to revisit this logic)
+  console.log(urlDatabase[result]);
+  if (urlDatabase[result] && n < 1000) {
+    return generateRandomString(n);
   }
   return result;
 };
