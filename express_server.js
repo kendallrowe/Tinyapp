@@ -38,6 +38,15 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${newShortUrl}`);
 });
 
+// Edit an existing longURL/ShortURL pair to update longURL
+app.post("/urls/:shortURL/edit", (req, res) => {
+  console.log(req.params.shortURL);
+  console.log(req.body.length);
+  res.statusCode = 200;
+  urlDatabase[req.params.shortURL] = req.body.longURL;
+  res.redirect(`/urls/`);
+});
+
 // Redirection for shortURL to access a long URL
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
