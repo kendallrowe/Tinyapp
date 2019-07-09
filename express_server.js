@@ -27,7 +27,7 @@ app.post("/register", (req, res) => {
   let userID = newUser();
   if (!req.body.email || !req.body.password) {
     res.statusCode = 400;
-    return res.send("Missing password or username");
+    return res.send("Missing password or email");
   } else if (emailAlreadyExists(req.body.email)) {
     res.statusCode = 400;
     return res.send("It looks like your email already exists. Try the login page!");
@@ -52,29 +52,29 @@ app.get("/login", (req, res) => {
   res.render("urls_login", templateVars);
 });
 
-// Take login username and store in cookie if user doesn't already have a username as cookie
+// Take login userID and store in cookie if user doesn't already have a userID as cookie
 app.post("/login", (req, res) => {
   let userID = emailAlreadyExists(req.body.email);
   // If user with email can't be found, return 403 status code
   if (!userID) {
     res.statusCode = 403;
     return res.send("Unable to find your email address, make sure you have registered!");
-  } 
+  }
 
   // If user with email is located, compare password with existing, if it does not match return 403 status code
-  if(users[userID].password !== req.body.password) {
+  if (users[userID].password !== req.body.password) {
     res.statusCode = 403;
     return res.send("Password did not match. Make sure to check your password!");
   }
   
   // If both checks pass, set user_id cookie with matching user's id, redirect to urls
-  res.cookie("user_id", userID)
+  res.cookie("user_id", userID);
   res.redirect("/urls");
 });
 
-// If cookie for username already exists, provide logout screen to logout
+// If cookie for userID already exists, provide logout screen to logout
 app.post("/logout", (req, res) => {
-  delete res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
