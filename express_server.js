@@ -23,15 +23,24 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  let userID = generateRandomString(0);
-  // Add a new user object to global users
-
-    // Include id, email and password
-    // Random id generated using same random string function
-  // After adding user, set user_id cookie with ID
+  // Random id generated using same random string function
+  let userID = newUser();
+  if (!req.body.email || !req.body.password) {
+    res.statusCode = 400;
+    return res.send("Missing password or username");
+  } else {
+    // Add a new user object to global users - Include id, email and password
+    users[userID] = {
+      id: userID,
+      email: req.body.email,
+      password: req.body.password
+    };
+    console.log(users);
+    // After adding user, set user_id cookie with ID
+    res.cookie("user_id", userID);
+  }
   // Redirect to /urls
-  // Test user is being appended (clg before redirect)
-  // Test that user_id cookie set correctly on redirection
+  res.redirect("/urls");
 });
 
 // Take login username and store in cookie if user doesn't already have a username as cookie
@@ -104,6 +113,3 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
-
-
