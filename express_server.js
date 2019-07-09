@@ -1,14 +1,11 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const { urlDatabase, users } = require("./constants");
+const { newUser, generateRandomString } = require("./helpers");
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
-
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -16,6 +13,25 @@ app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.redirect("/urls");
+});
+
+app.get("/register", (req, res) => {
+  let templateVars = {
+    username: req.cookies.username
+  };
+  res.render("urls_register", templateVars);
+});
+
+app.post("/register", (req, res) => {
+  let userID = generateRandomString(0);
+  // Add a new user object to global users
+
+    // Include id, email and password
+    // Random id generated using same random string function
+  // After adding user, set user_id cookie with ID
+  // Redirect to /urls
+  // Test user is being appended (clg before redirect)
+  // Test that user_id cookie set correctly on redirection
 });
 
 // Take login username and store in cookie if user doesn't already have a username as cookie
@@ -89,20 +105,5 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-// Helper function to generate a random string of 6 characters for short URL
-const generateRandomString = function(n) {
-  n += 1;
-  const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let result           = '';
-  for (let i = 0; i < 5; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  // If the randomly created string already exists, recurse to generate a new random string. Will only attempt max 1000 times. 
-  // If 1000 is exceeded, will overwrite one of the strings (for larger userbase would need to revisit this logic)
-  console.log(urlDatabase[result]);
-  if (urlDatabase[result] && n < 1000) {
-    return generateRandomString(n);
-  }
-  return result;
-};
+
+
