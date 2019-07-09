@@ -26,8 +26,8 @@
           <tr>
             <td><%= url %></td>
             <td><%= urls[url] %></td>
-            <td><form method="POST" action=<%=`/urls/${url}`%>><button style="width: 70px; height: 40px; color: steelblue; border: 1px solid steelblue; background-color: white; border-radius: 5px">Edit</button></form></td>
-            <td><form method="POST" action=<%=`/urls/${url}/delete`%>><button style="width: 70px; height: 40px; color: indianred; border: 1px solid indianred; background-color: white; border-radius: 5px">Delete</button></form></td>
+            <td><form method="POST" action=<%=`/urls/${url}`%>><button type="submit" style="color: #007bff; background: white; border: 1px solid #007bff;" class="btn btn-primary">Edit</button></form></td>
+            <td><form method="POST" action=<%=`/urls/${url}/delete`%>><button type="submit" style="color: indianred; background: white; border: 1px solid indianred;" class="btn btn-primary">Delete</button></form></td>
           </tr>
         <% } %>
       </tbody>
