@@ -36,4 +36,4 @@ const emailAlreadyExists = function(id, email) {
   return false;
 }
 
-module.exports = { newUser, generateRandomString };
+module.exports = { newUser, generateRandomString, emailAlreadyExists };
