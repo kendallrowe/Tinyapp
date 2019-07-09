@@ -25,7 +25,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   // Random id generated using same random string function
   let userID = newUser();
-  if (!req.body.email || !req.body.password || emailAlreadyExists(userID, req.body.email) === true) {
+  if (!req.body.email || !req.body.password || emailAlreadyExists(req.body.email) === true) {
     res.statusCode = 400;
     return res.send("Missing password or username");
   } else {
@@ -51,6 +51,10 @@ app.get("/login", (req, res) => {
 
 // Take login username and store in cookie if user doesn't already have a username as cookie
 app.post("/login", (req, res) => {
+  // if (emailAlreadyExists(req.body.email))
+  // If user with email can't be found, return 403 status code
+  // If user with email is located, compare password with existing, if it does not match return 403 status code
+  // If both checks pass, set user_id cookie with matching user's id, redirect to urls
   res.cookie("username", req.body.username);
   res.redirect("/urls");
 });

@@ -27,13 +27,15 @@ const createUserClosure = function() {
 
 const newUser = createUserClosure();
 
-const emailAlreadyExists = function(id, email) {
-  if (users[id]) {
-    if (users[id].email === email) {
+const emailAlreadyExists = function(email) {
+  for (let user in users) {
+    if (users[user].email === email) {
       return true;
     }
   }
   return false;
 };
+
+console.log(emailAlreadyExists("user@example.com"))
 
 module.exports = { newUser, generateRandomString, emailAlreadyExists };
