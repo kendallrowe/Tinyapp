@@ -46,8 +46,9 @@ app.get("/login", (req, res) => {
   let templateVars = {
     user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id]
   };
-  res.render("urls_register", templateVars);
+  res.render("urls_login", templateVars);
 });
+
 // Take login username and store in cookie if user doesn't already have a username as cookie
 app.post("/login", (req, res) => {
   res.cookie("username", req.body.username);
