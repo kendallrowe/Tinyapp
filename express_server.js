@@ -19,7 +19,6 @@ app.get("/register", (req, res) => {
   let templateVars = {
     user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id]
   };
-  console.log(templateVars);
   res.render("urls_register", templateVars);
 });
 
@@ -36,7 +35,6 @@ app.post("/register", (req, res) => {
       email: req.body.email,
       password: req.body.password
     };
-    console.log(users);
     // After adding user, set user_id cookie with ID
     res.cookie("user_id", userID);
   }
@@ -44,6 +42,12 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 });
 
+app.get("/login", (req, res) => {
+  let templateVars = {
+    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id]
+  };
+  res.render("urls_register", templateVars);
+});
 // Take login username and store in cookie if user doesn't already have a username as cookie
 app.post("/login", (req, res) => {
   res.cookie("username", req.body.username);
@@ -58,7 +62,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-    user: users[req.cookies.user_id],
+    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id],
     urls: urlDatabase
   };
   res.render("urls_index", templateVars);
@@ -66,14 +70,14 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    user: users[req.cookies.user_id]
+    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id]
   };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
-    user: users[req.cookies.user_id],
+    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id],
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL]
   };
