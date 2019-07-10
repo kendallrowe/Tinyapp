@@ -81,7 +81,7 @@ app.post("/logout", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id],
-    urls: urlDatabase
+    urls: urlsForUser(req.cookies.user_id)
   };
   
   res.render("urls_index", templateVars);
