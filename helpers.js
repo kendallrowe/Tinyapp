@@ -36,4 +36,14 @@ const emailAlreadyExists = function(email) {
   return undefined;
 };
 
+const urlsForUser = function(id) {
+  const userURLS = [];
+  for (let shortURL in urlDatabase) {
+    if (urlDatabase[shortURL].userID === id) {
+      userURLS.push({ [shortURL]: urlDatabase[shortURL].longURL });
+    }
+  }
+  return userURLS;
+};
+
 module.exports = { newUser, generateRandomString, emailAlreadyExists };
