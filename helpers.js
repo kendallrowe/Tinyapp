@@ -10,7 +10,7 @@ const generateRandomString = function(n, database) {
   
   // If the randomly created string already exists, recurse to generate a new random string. Will only attempt max 1000 times.
   // If 1000 is exceeded, will overwrite one of the strings (for larger userbase would need to revisit this logic)
-  if (!database[result]) {
+  if (!database[result] || n > 1000) {
     return result;
   }
   return generateRandomString(n, database);
