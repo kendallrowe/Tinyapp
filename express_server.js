@@ -101,7 +101,7 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id],
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL]
+    longURL: urlDatabase[req.params.shortURL].longURL
   };
   res.render("urls_show", templateVars);
 });
@@ -110,13 +110,13 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
   const newShortUrl = generateRandomString(0);
-  urlDatabase[newShortUrl] = req.body.longURL;
+  urlDatabase[newShortUrl].longURL = req.body.longURL;
   res.redirect(`/urls/${newShortUrl}`);
 });
 
 // Redirection for shortURL to access a long URL
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
@@ -128,7 +128,7 @@ app.post("/urls/:shortURL", (req, res) => {
 // Edit an existing longURL/ShortURL pair to update longURL
 app.post("/urls/:shortURL/edit", (req, res) => {
   res.statusCode = 200;
-  urlDatabase[req.params.shortURL] = req.body.longURL;
+  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
   res.redirect(`/urls/`);
 });
 
