@@ -89,12 +89,16 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = {
-    user: users[req.session.user_id],
-    urls: urlsForUser(req.session.user_id, urlDatabase)
-  };
-  
-  res.render("urls_index", templateVars);
+  if (!req.session.user_id) {
+    res.redirect("/login");
+  } else {
+    let templateVars = {
+      user: users[req.session.user_id],
+      urls: urlsForUser(req.session.user_id, urlDatabase)
+    };
+    
+    res.render("urls_index", templateVars);
+  }
 });
 
 app.get("/urls/new", (req, res) => {
@@ -109,12 +113,20 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = {
-    user: users[req.session.user_id],
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL].longURL
-  };
-  res.render("urls_show", templateVars);
+  if (!req.session.user_id) {
+    res.statusCode = 403;
+    return res.send("Make sure you log in or register to be able to start creating your own Tiny URL's!");
+  } else if (!validateUser(req.session.user_id, req.params.shortURL, urlDatabase)) {
+    res.statusCode = 403;
+    return res.send("You are only able to edit and delete short URL's created by you.");
+  } else {
+    let templateVars = {
+      user: users[req.session.user_id],
+      shortURL: req.params.shortURL,
+      longURL: urlDatabase[req.params.shortURL].longURL
+    };
+    res.render("urls_show", templateVars);
+  }
 });
 
 // Generate new random shortURL string upon form entry and update database with short and long URL
