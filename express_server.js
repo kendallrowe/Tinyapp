@@ -110,7 +110,7 @@ app.get("/urls/:shortURL", (req, res) => {
 // Generate new random shortURL string upon form entry and update database with short and long URL
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
-  const newShortUrl = generateRandomString(0);this
+  const newShortUrl = generateRandomString(0); this;
   urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.cookies.user_id };
   res.redirect(`/urls/${newShortUrl}`);
 });
@@ -129,7 +129,7 @@ app.post("/urls/:shortURL", (req, res) => {
 // Edit an existing longURL/ShortURL pair to update longURL
 app.post("/urls/:shortURL/edit", (req, res) => {
   
-  if(validateUser(req.cookies("user_id"), req.params.shortURL)) {
+  if (validateUser(req.cookies.user_id, req.params.shortURL)) {
     res.statusCode = 200;
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
     res.redirect(`/urls/`);
