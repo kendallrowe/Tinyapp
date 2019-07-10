@@ -1,3 +1,5 @@
+// Users Can Only See Their Own Shortened URLs
+
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const { urlDatabase, users } = require("./constants");
@@ -110,9 +112,8 @@ app.get("/urls/:shortURL", (req, res) => {
 // Generate new random shortURL string upon form entry and update database with short and long URL
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
-  const newShortUrl = generateRandomString(0);
+  const newShortUrl = generateRandomString(0);this
   urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.cookies.user_id };
-  console.log(urlDatabase);
   res.redirect(`/urls/${newShortUrl}`);
 });
 
