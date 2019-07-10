@@ -56,12 +56,25 @@ describe("urlsForUser", function() {
     const expectedOutput = [];
     assert.deepEqual(user, expectedOutput);
   });
+
 });
 
 describe("validateUser", function() {
-  it("should return true if shortURL exists in users database", function() {
-    const user = validateUser("user2RandomID", testUsers)
+  it("should return true if shortURL exists in url database and has tag matching to current user", function() {
+    const user = validateUser("userRandomID2", "ters44", testURLS)
     const expectedOutput = true;
+    assert.strictEqual(user, expectedOutput);
+  });
+
+  it("should return false if shortURL does not exists in url database", function() {
+    const user = validateUser("userRandomID2", "iewiuriu", testURLS)
+    const expectedOutput = false;
+    assert.strictEqual(user, expectedOutput);
+  });
+
+  it("should return false if shortURL does exist in url database but to a different user", function() {
+    const user = validateUser("userRandomID2", "CaCft", testURLS)
+    const expectedOutput = false;
     assert.strictEqual(user, expectedOutput);
   });
 });
