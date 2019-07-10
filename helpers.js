@@ -42,7 +42,7 @@ const emailAlreadyExists = function(email) {
 const urlsForUser = function(id) {
   const userURLS = [];
   if (id === undefined) {
-    return {};
+    return [];
   } else {
     for (let shortURL in urlDatabase) {
       if (urlDatabase[shortURL].userID === id) {
@@ -55,7 +55,14 @@ const urlsForUser = function(id) {
   }
   return userURLS;
 };
+const validateUser = function(userID, shortURL) {
+  const userURLS = urlsForUser(req.cookies("user_id"));
+  if(userURLS.length > 0) {
+    if (userURLS.find(user => user.shortURL === req.params.shortURL)) {
+      return true;
+    }
+  }
+  return false;
+}
 
-// console.log(urlsForUser("user2RandomID").find((element) => Object.keys(element)[0] === "9sm5xK"));
-
-module.exports = { newUser, generateRandomString, emailAlreadyExists, urlsForUser };
+module.exports = { newUser, generateRandomString, emailAlreadyExists, urlsForUser, validateUser };

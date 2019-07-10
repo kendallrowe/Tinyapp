@@ -27,8 +27,8 @@
               <tr>
                 <td><%= url.shortURL %></td>
                 <td><%= url.longURL %></td>
-                <td><form method="POST" action=<%=`/urls/${url}`%>><button type="submit" style="color: #007bff; background: white; border: 1px solid #007bff;" class="btn btn-primary">Edit</button></form></td>
-                <td><form method="POST" action=<%=`/urls/${url}/delete`%>><button type="submit" style="color: indianred; background: white; border: 1px solid indianred;" class="btn btn-primary">Delete</button></form></td>
+                <td><form method="POST" action=<%=`/urls/${url.shortURL}`%>><button type="submit" style="color: #007bff; background: white; border: 1px solid #007bff;" class="btn btn-primary">Edit</button></form></td>
+                <td><form method="POST" action=<%=`/urls/${url.shortURL}/delete`%>><button type="submit" style="color: indianred; background: white; border: 1px solid indianred;" class="btn btn-primary">Delete</button></form></td>
               </tr>
             <% } %>
       </tbody>
