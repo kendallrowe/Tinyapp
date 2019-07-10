@@ -37,7 +37,7 @@ app.post("/register", (req, res) => {
   if (!req.body.email || !req.body.password) {
     res.statusCode = 400;
     return res.send("Missing password or email");
-  } else if (emailAlreadyExists(req.body.email)) {
+  } else if (emailAlreadyExists(req.body.email, users)) {
     res.statusCode = 400;
     return res.send("It looks like your email already exists. Try the login page!");
   } else {
@@ -64,7 +64,7 @@ app.get("/login", (req, res) => {
 
 // Take login userID and store in cookie if user doesn't already have a userID as cookie
 app.post("/login", (req, res) => {
-  let userID = emailAlreadyExists(req.body.email);
+  let userID = emailAlreadyExists(req.body.email, users);
   // If user with email can't be found, return 403 status code
   if (!userID) {
     res.statusCode = 403;

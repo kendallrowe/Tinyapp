@@ -29,7 +29,7 @@ const createUserClosure = function() {
 const newUser = createUserClosure();
 
 // Returns user given an email address if user already exists in database
-const emailAlreadyExists = function(email) {
+const emailAlreadyExists = function(email, database) {
   for (let user in users) {
     if (users[user].email === email) {
       return user;
