@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const cookieSession = require('cookie-session')
+const cookieSession = require('cookie-session');
 const { urlDatabase, users } = require("./constants");
 const { newUser, generateRandomString, emailAlreadyExists, urlsForUser, validateUser } = require("./helpers");
 
@@ -18,7 +18,7 @@ app.use(cookieSession({
 
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}))
+}));
 
 app.get("/", (req, res) => {
   res.redirect("/urls");
