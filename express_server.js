@@ -25,10 +25,14 @@ app.get("/", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  let templateVars = {
-    user: users[req.session.user_id]
-  };
-  res.render("urls_register", templateVars);
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  } else {
+    let templateVars = {
+      user: users[req.session.user_id]
+    };
+    res.render("urls_register", templateVars);
+  }
 });
 
 app.post("/register", (req, res) => {
@@ -56,10 +60,14 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  let templateVars = {
-    user: users[req.session.user_id]
-  };
-  res.render("urls_login", templateVars);
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  } else {
+    let templateVars = {
+      user: users[req.session.user_id]
+    };
+    res.render("urls_login", templateVars);
+  }
 });
 
 // Take login userID and store in cookie if user doesn't already have a userID as cookie
@@ -89,9 +97,11 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  // Authenticase that user is logged in
   if (!req.session.user_id) {
     res.redirect("/login");
   } else {
+    // If logged in, render main page
     let templateVars = {
       user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id, urlDatabase)
@@ -162,8 +172,16 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect(`/urls`);
+  if (!req.session.user_id) {
+    res.statusCode = 403;
+    return res.send("Make sure you log in or register to be able to start creating your own Tiny URL's!");
+  } else if (!validateUser(req.session.user_id, req.params.shortURL, urlDatabase)) {
+    res.statusCode = 403;
+    return res.send("You are only able to edit and delete short URL's created by you.");
+  } else {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect(`/urls`);
+  }
 });
 
 app.listen(PORT, () => {
