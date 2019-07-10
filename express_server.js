@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = {
-    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id]
+    user: users[req.session.user_id]
   };
   res.render("urls_register", templateVars);
 });
@@ -57,7 +57,7 @@ app.post("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id]
+    user: users[req.session.user_id]
   };
   res.render("urls_login", templateVars);
 });
@@ -90,7 +90,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id],
+    user: users[req.session.user_id],
     urls: urlsForUser(req.session.user_id, urlDatabase)
   };
   
@@ -99,7 +99,7 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id]
+    user: users[req.session.user_id]
   };
   if (templateVars.user) {
     res.render("urls_new", templateVars);
@@ -110,7 +110,7 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
-    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id],
+    user: users[req.session.user_id],
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL
   };
