@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const cookieParser = require("cookie-parser");
+const cookieSession = require('cookie-session')
 const { urlDatabase, users } = require("./constants");
 const { newUser, generateRandomString, emailAlreadyExists, urlsForUser, validateUser } = require("./helpers");
 
@@ -11,7 +11,14 @@ app.set("view engine", "ejs");
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+
+app.use(cookieSession({
+  name: 'session',
+  keys: [/* secret keys */],
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
 
 app.get("/", (req, res) => {
   res.redirect("/urls");
@@ -19,7 +26,7 @@ app.get("/", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = {
-    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id]
+    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id]
   };
   res.render("urls_register", templateVars);
 });
@@ -42,7 +49,7 @@ app.post("/register", (req, res) => {
     };
 
     // After adding user, set user_id cookie with ID
-    res.cookie("user_id", userID);
+    res.session.user_id = userID;
   }
   // Redirect to /urls
   res.redirect("/urls");
@@ -50,7 +57,7 @@ app.post("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id]
+    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id]
   };
   res.render("urls_login", templateVars);
 });
@@ -71,20 +78,20 @@ app.post("/login", (req, res) => {
   }
   
   // If both checks pass, set user_id cookie with matching user's id, redirect to urls
-  res.cookie("user_id", userID);
+  res.session.user_id = userID;
   res.redirect("/urls");
 });
 
 // If cookie for userID already exists, provide logout screen to logout
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
+  res.session.user_id = null;
   res.redirect("/urls");
 });
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id],
-    urls: urlsForUser(req.cookies.user_id)
+    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id],
+    urls: urlsForUser(req.session.user_id)
   };
   
   res.render("urls_index", templateVars);
@@ -92,7 +99,7 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id]
+    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id]
   };
   if (templateVars.user) {
     res.render("urls_new", templateVars);
@@ -103,7 +110,7 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
-    user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id],
+    user: users[req.session.user_id] === undefined ? false : users[req.session.user_id],
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL
   };
@@ -114,7 +121,7 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
   const newShortUrl = generateRandomString(0); this;
-  urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.cookies.user_id };
+  urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.session.user_id };
   res.redirect(`/urls/${newShortUrl}`);
 });
 
@@ -139,7 +146,7 @@ app.post("/urls/:shortURL/edit", (req, res) => {
   console.log(urlDatabase[req.params.shortURL].longURL);
   console.log(req.body.longURL);
   console.log(urlDatabase);
-  if (validateUser(req.cookies.user_id, req.params.shortURL)) {
+  if (validateUser(req.session.user_id, req.params.shortURL)) {
     res.statusCode = 200;
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
     console.log("aFTER:", urlDatabase);
