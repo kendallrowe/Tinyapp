@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(cookieSession({
   name: 'session',
-  keys: [/* secret keys */],
+  keys: ["key1"],
 
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -49,7 +49,7 @@ app.post("/register", (req, res) => {
     };
 
     // After adding user, set user_id cookie with ID
-    res.session.user_id = userID;
+    req.session.user_id = userID;
   }
   // Redirect to /urls
   res.redirect("/urls");
@@ -78,13 +78,13 @@ app.post("/login", (req, res) => {
   }
   
   // If both checks pass, set user_id cookie with matching user's id, redirect to urls
-  res.session.user_id = userID;
+  req.session.user_id = userID;
   res.redirect("/urls");
 });
 
 // If cookie for userID already exists, provide logout screen to logout
 app.post("/logout", (req, res) => {
-  res.session.user_id = null;
+  req.session.user_id = null;
   res.redirect("/urls");
 });
 
