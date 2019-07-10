@@ -41,9 +41,16 @@ const emailAlreadyExists = function(email) {
 // Returns the URLs where the userID is equal to the id of the currently logged in user.
 const urlsForUser = function(id) {
   const userURLS = [];
-  for (let shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      userURLS.push({ [shortURL]: urlDatabase[shortURL].longURL });
+  if (id === undefined) {
+    return {};
+  } else {
+    for (let shortURL in urlDatabase) {
+      if (urlDatabase[shortURL].userID === id) {
+        userURLS.push({ 
+          shortURL: shortURL, 
+          longURL: urlDatabase[shortURL].longURL 
+        });
+      }
     }
   }
   return userURLS;
