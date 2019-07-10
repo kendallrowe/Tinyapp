@@ -1,11 +1,19 @@
 const { assert } = require('chai');
 
-const { getUserByEmail } = require('../helpers.js');
+const { getUserByEmail, urlsForUser, validateUser } = require('../helpers.js');
 
 const testURLS = {
   "CaCft": {
     longURL: "http://vicandkentietheknot.com/Home/", 
     userID: "userRandomID"
+  },
+  "adsf32": {
+    longURL: "https://www.lighthouselabs.ca", 
+    userID: "userRandomID2"
+  },
+  "ters44": {
+    longURL: "https://www.facebook.com/", 
+    userID: "userRandomID2"
   }
 };
 
@@ -36,6 +44,20 @@ describe('getUserByEmail', function() {
   });
 });
 
+describe("urlsForUser", function() {
+  it("should return array of correct shortURL and LongURLS in array if user has multiple urls on site", function() {
+    const user = urlsForUser("userRandomID2", testURLS)
+    const expectedOutput = [{shortURL: "adsf32", longURL: "https://www.lighthouselabs.ca"}, {shortURL: "ters44", longURL: "https://www.facebook.com/"}];
+    assert.deepEqual(user, expectedOutput);
+  });
+
+  it("should return empty array if user has not created any urls", function() {
+    const user = urlsForUser("kendall", testURLS)
+    const expectedOutput = [];
+    assert.deepEqual(user, expectedOutput);
+  });
+});
+
 describe("validateUser", function() {
   it("should return true if shortURL exists in users database", function() {
     const user = validateUser("user2RandomID", testUsers)
@@ -43,30 +65,3 @@ describe("validateUser", function() {
     assert.strictEqual(user, expectedOutput);
   });
 });
-
-const urlsForUser = function(id,) {
-  const userURLS = [];
-  if (id === undefined) {
-    return [];
-  } else {
-    for (let shortURL in urlDatabase) {
-      if (urlDatabase[shortURL].userID === id) {
-        userURLS.push({
-          shortURL: shortURL,
-          longURL: urlDatabase[shortURL].longURL
-        });
-      }
-    }
-  }
-  return userURLS;
-};
-
-const validateUser = function(userID, shortURL) {
-  const userURLS = urlsForUser(userID);
-  if (userURLS.length > 0) {
-    if (userURLS.find(user => user.shortURL === shortURL)) {
-      return true;
-    }
-  }
-  return false;
-};
