@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const methodOverride = require('method-override')
 const cookieSession = require('cookie-session');
 const { urlDatabase, users } = require("./constants");
 const { newUser, generateRandomString, getUserByEmail, urlsForUser, validateUser } = require("./helpers");
@@ -11,6 +12,9 @@ app.set("view engine", "ejs");
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'));
 
 app.use(cookieSession({
   name: 'session',
@@ -142,7 +146,7 @@ app.get("/urls/:shortURL", (req, res) => {
 // Generate new random shortURL string upon form entry and update database with short and long URL
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
-  const newShortUrl = generateRandomString(0, urlDatabase); this;
+  const newShortUrl = generateRandomString(0, urlDatabase);
   urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.session.user_id };
   res.redirect(`/urls/${newShortUrl}`);
 });
