@@ -44,7 +44,7 @@ describe("validateUser", function() {
   });
 });
 
-const urlsForUser = function(id) {
+const urlsForUser = function(id,) {
   const userURLS = [];
   if (id === undefined) {
     return [];
