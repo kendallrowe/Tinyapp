@@ -1,9 +1,7 @@
-// Users Can Only See Their Own Shortened URLs
-
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const { urlDatabase, users } = require("./constants");
-const { newUser, generateRandomString, emailAlreadyExists } = require("./helpers");
+const { newUser, generateRandomString, emailAlreadyExists, urlsForUser } = require("./helpers");
 const app = express();
 const PORT = 8080; // default port 8080
 
