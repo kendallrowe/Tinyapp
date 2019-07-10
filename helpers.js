@@ -17,16 +17,18 @@ const generateRandomString = function(n) {
   return generateRandomString(n);
 };
 
+// Closure function used to generate increasing numbered random ID's for users
 const createUserClosure = function() {
   let userNum = 0;
   return function() {
     userNum += 1;
-    return `user${userNum}-${generateRandomString(0)}`;
+    return `user-${userNum}${generateRandomString(0)}`;
   };
 };
 
 const newUser = createUserClosure();
 
+// Returns user given an email address if user already exists in database
 const emailAlreadyExists = function(email) {
   for (let user in users) {
     if (users[user].email === email) {
@@ -36,6 +38,7 @@ const emailAlreadyExists = function(email) {
   return undefined;
 };
 
+// Returns the URLs where the userID is equal to the id of the currently logged in user.
 const urlsForUser = function(id) {
   const userURLS = [];
   for (let shortURL in urlDatabase) {
@@ -46,4 +49,6 @@ const urlsForUser = function(id) {
   return userURLS;
 };
 
-module.exports = { newUser, generateRandomString, emailAlreadyExists };
+// console.log(urlsForUser("user2RandomID").find((element) => Object.keys(element)[0] === "9sm5xK"));
+
+module.exports = { newUser, generateRandomString, emailAlreadyExists, urlsForUser };
