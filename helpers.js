@@ -1,7 +1,5 @@
-const { urlDatabase, users } = require("./constants");
-
 // Helper function to generate a random string of 6 characters for short URL
-const generateRandomString = function(n) {
+const generateRandomString = function(n, database) {
   n += 1;
   const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
@@ -12,7 +10,7 @@ const generateRandomString = function(n) {
   
   // If the randomly created string already exists, recurse to generate a new random string. Will only attempt max 1000 times.
   // If 1000 is exceeded, will overwrite one of the strings (for larger userbase would need to revisit this logic)
-  if (!urlDatabase[result]) {
+  if (!database[result]) {
     return result;
   }
   return generateRandomString(n);
@@ -40,22 +38,24 @@ const getUserByEmail = function(email, database) {
 };
 
 // Returns the URLs where the userID is equal to the id of the currently logged in user.
-const urlsForUser = function(id) {
+const urlsForUser = function(id, database) {
   const userURLS = [];
   if (id === undefined) {
     return [];
   } else {
-    for (let shortURL in urlDatabase) {
-      if (urlDatabase[shortURL].userID === id) {
+    for (let shortURL in database) {
+      if (database[shortURL].userID === id) {
         userURLS.push({
           shortURL: shortURL,
-          longURL: urlDatabase[shortURL].longURL
+          longURL: database[shortURL].longURL
         });
       }
     }
   }
   return userURLS;
 };
+
+// Takes a user ID and shorturl as arguments. If the passed shortURL exists among the urls of the userID return true.
 const validateUser = function(userID, shortURL) {
   const userURLS = urlsForUser(userID);
   if (userURLS.length > 0) {
