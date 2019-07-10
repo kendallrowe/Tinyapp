@@ -46,9 +46,9 @@ const urlsForUser = function(id) {
   } else {
     for (let shortURL in urlDatabase) {
       if (urlDatabase[shortURL].userID === id) {
-        userURLS.push({ 
-          shortURL: shortURL, 
-          longURL: urlDatabase[shortURL].longURL 
+        userURLS.push({
+          shortURL: shortURL,
+          longURL: urlDatabase[shortURL].longURL
         });
       }
     }
@@ -56,13 +56,13 @@ const urlsForUser = function(id) {
   return userURLS;
 };
 const validateUser = function(userID, shortURL) {
-  const userURLS = urlsForUser(req.cookies("user_id"));
-  if(userURLS.length > 0) {
-    if (userURLS.find(user => user.shortURL === req.params.shortURL)) {
+  const userURLS = urlsForUser(userID);
+  if (userURLS.length > 0) {
+    if (userURLS.find(user => user.shortURL === shortURL)) {
       return true;
     }
   }
   return false;
-}
+};
 
 module.exports = { newUser, generateRandomString, emailAlreadyExists, urlsForUser, validateUser };
