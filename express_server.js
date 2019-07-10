@@ -83,6 +83,7 @@ app.get("/urls", (req, res) => {
     user: users[req.cookies.user_id] === undefined ? false : users[req.cookies.user_id],
     urls: urlDatabase
   };
+  
   res.render("urls_index", templateVars);
 });
 
@@ -110,7 +111,8 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
   const newShortUrl = generateRandomString(0);
-  urlDatabase[newShortUrl].longURL = req.body.longURL;
+  urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.cookies.user_id };
+  console.log(urlDatabase);
   res.redirect(`/urls/${newShortUrl}`);
 });
 
