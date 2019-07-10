@@ -33,7 +33,7 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
   // Random id generated using same random string function
-  let userID = newUser();
+  let userID = newUser(urlDatabase);
   if (!req.body.email || !req.body.password) {
     res.statusCode = 400;
     return res.send("Missing password or email");
@@ -91,7 +91,7 @@ app.post("/logout", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     user: users[req.session.user_id] === undefined ? false : users[req.session.user_id],
-    urls: urlsForUser(req.session.user_id)
+    urls: urlsForUser(req.session.user_id, urlDatabase)
   };
   
   res.render("urls_index", templateVars);
@@ -120,7 +120,7 @@ app.get("/urls/:shortURL", (req, res) => {
 // Generate new random shortURL string upon form entry and update database with short and long URL
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
-  const newShortUrl = generateRandomString(0); this;
+  const newShortUrl = generateRandomString(0, urlDatabase); this;
   urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.session.user_id };
   res.redirect(`/urls/${newShortUrl}`);
 });
@@ -138,7 +138,7 @@ app.post("/urls/:shortURL", (req, res) => {
 
 // Edit an existing longURL/ShortURL pair to update longURL
 app.post("/urls/:shortURL/edit", (req, res) => {
-  if (validateUser(req.session.user_id, req.params.shortURL)) {
+  if (validateUser(req.session.user_id, req.params.shortURL, urlDatabase)) {
     res.statusCode = 200;
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
 

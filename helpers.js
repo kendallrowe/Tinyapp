@@ -13,15 +13,15 @@ const generateRandomString = function(n, database) {
   if (!database[result]) {
     return result;
   }
-  return generateRandomString(n);
+  return generateRandomString(n, database);
 };
 
 // Closure function used to generate increasing numbered random ID's for users
 const createUserClosure = function() {
   let userNum = 0;
-  return function() {
+  return function(database) {
     userNum += 1;
-    return `user-${userNum}${generateRandomString(0)}`;
+    return `user-${userNum}${generateRandomString(0, database)}`;
   };
 };
 
@@ -56,8 +56,8 @@ const urlsForUser = function(id, database) {
 };
 
 // Takes a user ID and shorturl as arguments. If the passed shortURL exists among the urls of the userID return true.
-const validateUser = function(userID, shortURL) {
-  const userURLS = urlsForUser(userID);
+const validateUser = function(userID, shortURL, database) {
+  const userURLS = urlsForUser(userID, database);
   if (userURLS.length > 0) {
     if (userURLS.find(user => user.shortURL === shortURL)) {
       return true;
