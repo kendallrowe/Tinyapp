@@ -23,10 +23,10 @@
       </thead>
       <% if(user !== false){ %> 
       <tbody>
-            <% for(let url in urls) { %>
+            <% for(let url of urls) { %>
               <tr>
-                <td><%= url %></td>
-                <td><%= urls[url].longURL %></td>
+                <td><%= url.shortURL %></td>
+                <td><%= url.longURL %></td>
                 <td><form method="POST" action=<%=`/urls/${url}`%>><button type="submit" style="color: #007bff; background: white; border: 1px solid #007bff;" class="btn btn-primary">Edit</button></form></td>
                 <td><form method="POST" action=<%=`/urls/${url}/delete`%>><button type="submit" style="color: indianred; background: white; border: 1px solid indianred;" class="btn btn-primary">Delete</button></form></td>
               </tr>
