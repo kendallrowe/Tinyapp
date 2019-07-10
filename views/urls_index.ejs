@@ -21,17 +21,23 @@
           <th scope="col">Delete</th>
         </tr>
       </thead>
+      <% if(user !== false){ %> 
       <tbody>
-        <% for(let url in urls) { %>
-          <tr>
-            <td><%= url %></td>
-            <td><%= urls[url].longURL %></td>
-            <td><form method="POST" action=<%=`/urls/${url}`%>><button type="submit" style="color: #007bff; background: white; border: 1px solid #007bff;" class="btn btn-primary">Edit</button></form></td>
-            <td><form method="POST" action=<%=`/urls/${url}/delete`%>><button type="submit" style="color: indianred; background: white; border: 1px solid indianred;" class="btn btn-primary">Delete</button></form></td>
-          </tr>
-        <% } %>
+            <% for(let url in urls) { %>
+              <tr>
+                <td><%= url %></td>
+                <td><%= urls[url].longURL %></td>
+                <td><form method="POST" action=<%=`/urls/${url}`%>><button type="submit" style="color: #007bff; background: white; border: 1px solid #007bff;" class="btn btn-primary">Edit</button></form></td>
+                <td><form method="POST" action=<%=`/urls/${url}/delete`%>><button type="submit" style="color: indianred; background: white; border: 1px solid indianred;" class="btn btn-primary">Delete</button></form></td>
+              </tr>
+            <% } %>
       </tbody>
     </table>
+    <% } else{ %> 
+      <tr>
+        <td><h4 style="margin-top: 2vh; color: #28a745">Make sure to log in or register so that you can start creating your own Tiny URL's!</h4></td>
+        </tr>
+    <% } %>
   </main>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
