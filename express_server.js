@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const cookieSession = require('cookie-session');
 const { urlDatabase, users } = require("./constants");
-const { newUser, generateRandomString, emailAlreadyExists, urlsForUser, validateUser } = require("./helpers");
+const { newUser, generateRandomString, getUserByEmail, urlsForUser, validateUser } = require("./helpers");
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -37,7 +37,7 @@ app.post("/register", (req, res) => {
   if (!req.body.email || !req.body.password) {
     res.statusCode = 400;
     return res.send("Missing password or email");
-  } else if (emailAlreadyExists(req.body.email, users)) {
+  } else if (getUserByEmail(req.body.email, users)) {
     res.statusCode = 400;
     return res.send("It looks like your email already exists. Try the login page!");
   } else {
@@ -64,7 +64,7 @@ app.get("/login", (req, res) => {
 
 // Take login userID and store in cookie if user doesn't already have a userID as cookie
 app.post("/login", (req, res) => {
-  let userID = emailAlreadyExists(req.body.email, users);
+  let userID = getUserByEmail(req.body.email, users);
   // If user with email can't be found, return 403 status code
   if (!userID) {
     res.statusCode = 403;
@@ -127,11 +127,7 @@ app.post("/urls", (req, res) => {
 
 // Redirection for shortURL to access a long URL
 app.get("/u/:shortURL", (req, res) => {
-  console.log("Database", urlDatabase);
-  console.log("Shorturl object", urlDatabase[req.params.shortURL]);
-  console.log("Long", urlDatabase[req.params.shortURL].longURL);
   const longURL = urlDatabase[req.params.shortURL].longURL;
-  console.log("Long again", longURL);
   res.redirect(longURL);
 });
 
@@ -142,14 +138,9 @@ app.post("/urls/:shortURL", (req, res) => {
 
 // Edit an existing longURL/ShortURL pair to update longURL
 app.post("/urls/:shortURL/edit", (req, res) => {
-  console.log(req.params.shortURL);
-  console.log(urlDatabase[req.params.shortURL].longURL);
-  console.log(req.body.longURL);
-  console.log(urlDatabase);
   if (validateUser(req.session.user_id, req.params.shortURL)) {
     res.statusCode = 200;
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
-    console.log("aFTER:", urlDatabase);
 
     res.redirect(`/urls/`);
   } else {

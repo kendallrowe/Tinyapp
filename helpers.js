@@ -9,6 +9,7 @@ const generateRandomString = function(n) {
   for (let i = 0; i < 5; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
+  
   // If the randomly created string already exists, recurse to generate a new random string. Will only attempt max 1000 times.
   // If 1000 is exceeded, will overwrite one of the strings (for larger userbase would need to revisit this logic)
   if (!urlDatabase[result]) {
@@ -29,9 +30,9 @@ const createUserClosure = function() {
 const newUser = createUserClosure();
 
 // Returns user given an email address if user already exists in database
-const emailAlreadyExists = function(email, database) {
-  for (let user in users) {
-    if (users[user].email === email) {
+const getUserByEmail = function(email, database) {
+  for (let user in database) {
+    if (database[user].email === email) {
       return user;
     }
   }
@@ -65,4 +66,4 @@ const validateUser = function(userID, shortURL) {
   return false;
 };
 
-module.exports = { newUser, generateRandomString, emailAlreadyExists, urlsForUser, validateUser };
+module.exports = { newUser, generateRandomString, getUserByEmail, urlsForUser, validateUser };
