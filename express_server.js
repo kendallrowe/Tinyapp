@@ -1,7 +1,7 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const { urlDatabase, users } = require("./constants");
-const { newUser, generateRandomString, emailAlreadyExists, urlsForUser } = require("./helpers");
+const { newUser, generateRandomString, emailAlreadyExists, urlsForUser, validateUser } = require("./helpers");
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -128,9 +128,15 @@ app.post("/urls/:shortURL", (req, res) => {
 
 // Edit an existing longURL/ShortURL pair to update longURL
 app.post("/urls/:shortURL/edit", (req, res) => {
-  res.statusCode = 200;
-  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
-  res.redirect(`/urls/`);
+  
+  if(validateUser(req.cookies("user_id"), req.params.shortURL)) {
+    res.statusCode = 200;
+    urlDatabase[req.params.shortURL].longURL = req.body.longURL;
+    res.redirect(`/urls/`);
+  } else {
+    res.statusCode = 403;
+    return res.send("You are only able to edit and delete short URL's created by you.");
+  }
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
