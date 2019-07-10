@@ -1,7 +1,9 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const { urlDatabase, users } = require("./constants");
 const { newUser, generateRandomString, emailAlreadyExists, urlsForUser, validateUser } = require("./helpers");
+
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -36,8 +38,9 @@ app.post("/register", (req, res) => {
     users[userID] = {
       id: userID,
       email: req.body.email,
-      password: req.body.password
+      password: bcrypt.hashSync(req.body.password,10)
     };
+
     // After adding user, set user_id cookie with ID
     res.cookie("user_id", userID);
   }
@@ -62,7 +65,7 @@ app.post("/login", (req, res) => {
   }
 
   // If user with email is located, compare password with existing, if it does not match return 403 status code
-  if (users[userID].password !== req.body.password) {
+  if (!bcrypt.compareSync(req.body.password, users[userID].password)) {
     res.statusCode = 403;
     return res.send("Password did not match. Make sure to check your password!");
   }
@@ -117,7 +120,11 @@ app.post("/urls", (req, res) => {
 
 // Redirection for shortURL to access a long URL
 app.get("/u/:shortURL", (req, res) => {
+  console.log("Database", urlDatabase);
+  console.log("Shorturl object", urlDatabase[req.params.shortURL]);
+  console.log("Long", urlDatabase[req.params.shortURL].longURL);
   const longURL = urlDatabase[req.params.shortURL].longURL;
+  console.log("Long again", longURL);
   res.redirect(longURL);
 });
 
@@ -128,10 +135,15 @@ app.post("/urls/:shortURL", (req, res) => {
 
 // Edit an existing longURL/ShortURL pair to update longURL
 app.post("/urls/:shortURL/edit", (req, res) => {
-  
+  console.log(req.params.shortURL);
+  console.log(urlDatabase[req.params.shortURL].longURL);
+  console.log(req.body.longURL);
+  console.log(urlDatabase);
   if (validateUser(req.cookies.user_id, req.params.shortURL)) {
     res.statusCode = 200;
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
+    console.log("aFTER:", urlDatabase);
+
     res.redirect(`/urls/`);
   } else {
     res.statusCode = 403;
