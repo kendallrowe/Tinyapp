@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const methodOverride = require('method-override')
 const cookieSession = require('cookie-session');
 const { urlDatabase, users } = require("./constants");
-const { newUser, generateRandomString, getUserByEmail, urlsForUser, validateUser } = require("./helpers");
+const { newUser, newVistor, generateRandomString, getUserByEmail, urlsForUser, validateUser } = require("./helpers");
 
 const app = express();
 const PORT = 8080; // default port 8080
