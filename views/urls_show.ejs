@@ -38,13 +38,13 @@
   <div class="card text-center">
     <div class="card-body" >
       <h4 class="card-title" style="color: #28a745">Your Tiny URL Analytics</h4>
-      <div class="form-group mb-2 text-center" style="display: flex; flex-direction: row; justify-content: center; align-items: center">
+      <div class="form-group mb-2 text-center" style="display: flex; flex-direction: column; justify-content: center; align-items: center">
         <h5>Number of visits: <%= numberOfVisits %></h5>
         <h5>Number of unique visitors: <%= uniqueVisitors.length %></h5>
         <% if(uniqueVisitors.length > 0){ %> 
           <h5>Timestamps of visits:</h5>
           <ol>
-          <% for(let timestamp of Timestamps) { %>
+          <% for(let timestamp of timeStamps) { %>
             <li><%= timestamp %></li>
           <% } %>
           </ol>

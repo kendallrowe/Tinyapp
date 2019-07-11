@@ -133,10 +133,10 @@ app.get("/urls/:shortURL", (req, res) => {
     // Go through each timestamp for each given uniquevisitor for this url and add in an array to be sorted
     const timeStampArray = [];
     for (let visitor of urlDatabase[req.params.shortURL].uniqueVisitors) {
-      visitor.map(timestamp => timeStampArray.push(timestamp));
+      visitor.timeStamp.map(timestamp => timeStampArray.push(timestamp));
     }
-    timeStampArray.sort((a, b) => new Date(b) - new Date(a));
-    
+
+    timeStampArray.sort((a, b) => (new Date(b)) - (new Date(a)));
     let templateVars = {
       user: users[req.session.user_id],
       shortURL: req.params.shortURL,
@@ -167,21 +167,25 @@ app.get("/u/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
     res.statusCode = 400;
     return res.send("The page you have requested does not exist. Please check to make sure you've entered the correct Tiny URL and try again :)");
-  } 
+  }
+  // Obtain the index of the visitor with a visitor ID matching to current cookie session visitor ID
   const visitor = urlDatabase[req.params.shortURL].uniqueVisitors.indexOf(urlDatabase[req.params.shortURL].uniqueVisitors.find(visitor => visitor.visitorID === req.session.visitor_id));
+  // If current visitorID is found, update the number of visits and add a new timestamp
   if (visitor !== -1) {
     urlDatabase[req.params.shortURL].uniqueVisitors[visitor].numberOfVisits += 1;
     urlDatabase[req.params.shortURL].uniqueVisitors[visitor].timeStamp.push(dateFormat(new Date()));
   } else {
+    // If visitorID is not found, create a new ID for them and update their cookie
     req.session.visitor_id = newVisitor(urlDatabase);
 
+    // push an object for the new visitorID updating with their individual number of visits
     urlDatabase[req.params.shortURL].uniqueVisitors.push({
       visitorID: req.session.visitor_id,
       numberOfVisits: 1,
       timeStamp: [dateFormat(new Date())]
     });
   }
-  console.log(urlDatabase[req.params.shortURL].uniqueVisitors);
+  // Update the total number of visits for a given shortURL
   urlDatabase[req.params.shortURL].numberOfVisits += 1;
   res.redirect(urlDatabase[req.params.shortURL].longURL);
 });
