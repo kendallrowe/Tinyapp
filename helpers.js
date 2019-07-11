@@ -47,7 +47,9 @@ const urlsForUser = function(id, database) {
       if (database[shortURL].userID === id) {
         userURLS.push({
           shortURL: shortURL,
-          longURL: database[shortURL].longURL
+          longURL: database[shortURL].longURL,
+          numberOfVisits: database[shortURL].numberOfVisits,
+          uniqueVisitors: database[shortURL].uniqueVisitors
         });
       }
     }
