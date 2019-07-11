@@ -13,16 +13,16 @@ app.set("view engine", "ejs");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-// override with POST having ?_method=DELETE
-app.use(methodOverride('_method'));
-
 app.use(cookieSession({
   name: 'session',
   keys: ["key1"],
-
+  
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'));
 
 app.get("/", (req, res) => {
   res.redirect("/urls");
@@ -101,7 +101,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  // Authenticase that user is logged in
+  // Authenticate that user is logged in
   if (!req.session.user_id) {
     res.redirect("/login");
   } else {
@@ -163,7 +163,7 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 // Edit an existing longURL/ShortURL pair to update longURL
-app.post("/urls/:shortURL/edit", (req, res) => {
+app.put("/urls/:shortURL/edit/", (req, res) => {
   if (validateUser(req.session.user_id, req.params.shortURL, urlDatabase)) {
     res.statusCode = 200;
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
@@ -175,7 +175,7 @@ app.post("/urls/:shortURL/edit", (req, res) => {
   }
 });
 
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.delete("/urls/:shortURL/delete/", (req, res) => {
   if (!req.session.user_id) {
     res.statusCode = 403;
     return res.send("Make sure you log in or register to be able to start creating your own Tiny URL's!");
