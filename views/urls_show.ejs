@@ -36,14 +36,10 @@
   <!-- Analytics for existing url -->
   <div class="card text-center">
     <div class="card-body">
-      <h4 class="card-title">Edit</h4>
-      <form class=" text-center" action="/urls/<%= shortURL %>/edit/?_method=PUT" method="POST">
-        <div class="form-group mb-2" style="display: flex; flex-direction: row; justify-content: center; align-items: center">
-          <label style="margin: 0" for="longURL">Enter a URL:</label>
-          <input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em;">
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-      </form>
+      <h4 class="card-title">Your Tiny URL Analytics</h4>
+      <div class="form-group mb-2 text-center" style="display: flex; flex-direction: row; justify-content: center; align-items: center">
+        <h5>Number of visits to your Tiny URL: <%= numberOfVisits %></h5>
+      </div>
     </div>
   <div class="card-footer text-muted"></div>
 </div>
