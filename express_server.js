@@ -107,7 +107,6 @@ app.get("/urls", (req, res) => {
     user: users[req.session.user_id],
     urls: urlsForUser(req.session.user_id, urlDatabase)
   };
-  console.log(templateVars.user);
   
   res.render("urls_index", templateVars);
 });
@@ -134,7 +133,8 @@ app.get("/urls/:shortURL", (req, res) => {
     let templateVars = {
       user: users[req.session.user_id],
       shortURL: req.params.shortURL,
-      longURL: urlDatabase[req.params.shortURL].longURL
+      longURL: urlDatabase[req.params.shortURL].longURL,
+      numberOfVisits: urlDatabase[req.params.shortURL].numberOfVisits
     };
     res.render("urls_show", templateVars);
   }
