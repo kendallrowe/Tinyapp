@@ -26,7 +26,7 @@ const createLabelClosure = function(type) {
 };
 
 const newUser = createLabelClosure("user");
-const newVisitor = createLabelClosure("visitor")
+const newVisitor = createLabelClosure("visitor");
 
 const getUserByEmail = function(email, database) {
   for (let user in database) {
@@ -69,5 +69,5 @@ const validateUser = function(userID, shortURL, database) {
 const dateFormat = function(dt) {
   const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   return  `${monthNames[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()} - ${dt.getHours()}:${dt.getMinutes()}.${dt.getSeconds()}`;
-}
+};
 module.exports = { newUser, newVisitor, generateRandomString, getUserByEmail, urlsForUser, validateUser, dateFormat };
