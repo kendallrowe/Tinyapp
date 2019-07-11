@@ -155,12 +155,19 @@ app.post("/urls", (req, res) => {
 
 // Redirection for shortURL to access a long URL
 app.get("/u/:shortURL", (req, res) => {
+  const visitor = visitors.find(visitor => visitor.id === req.session.visitor_id);
   if (!urlDatabase[req.params.shortURL]) {
     res.statusCode = 400;
     return res.send("The page you have requested does not exist. Please check to make sure you've entered the correct Tiny URL and try again :)");
-  } else if (f=s) {
+  } else if (visitor) {
+    visitor.numberOfVisits += 1;
   } else {
     req.session.visitor_id = newVisitor(urlDatabase);
+    visitors.push({ 
+      id: req.session.visitor_id,
+      numberOfVisits: 1
+    });
+    
     urlDatabase[req.params.shortURL].uniqueVisitors.push({ 
       visitorID: req.session.visitor_id, 
       timeStamp: dateFormat(new Date())

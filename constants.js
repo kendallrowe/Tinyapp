@@ -1,7 +1,7 @@
-const urlDatabase = {
-};
+const urlDatabase = {};
 
-const users = {
-};
+const users = {};
+
+const visitors = [];
 
 module.exports = { urlDatabase, users };
