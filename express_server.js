@@ -130,11 +130,20 @@ app.get("/urls/:shortURL", (req, res) => {
     res.statusCode = 403;
     return res.send("You are only able to edit and delete short URL's created by you.");
   } else {
+    // Go through each timestamp for each given uniquevisitor for this url and add in an array to be sorted
+    const timeStampArray = [];
+    for (let visitor of urlDatabase[req.params.shortURL].uniqueVisitors) {
+      visitor.map(timestamp => timeStampArray.push(timestamp));
+    }
+    timeStampArray.sort((a, b) => new Date(b) - new Date(a));
+    
     let templateVars = {
       user: users[req.session.user_id],
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
-      numberOfVisits: urlDatabase[req.params.shortURL].numberOfVisits
+      numberOfVisits: urlDatabase[req.params.shortURL].numberOfVisits,
+      uniqueVisitors: urlDatabase[req.params.shortURL].uniqueVisitors,
+      timeStamps: timeStampArray
     };
     res.render("urls_show", templateVars);
   }
