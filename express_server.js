@@ -102,18 +102,14 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  // Authenticate that user is logged in
-  if (!users[req.session.user_id]) {
-    res.redirect("/login");
-  } else {
-    // If logged in, render main page
-    let templateVars = {
-      user: users[req.session.user_id],
-      urls: urlsForUser(req.session.user_id, urlDatabase)
-    };
-    
-    res.render("urls_index", templateVars);
-  }
+  // If logged in, render main page
+  let templateVars = {
+    user: users[req.session.user_id],
+    urls: urlsForUser(req.session.user_id, urlDatabase)
+  };
+  console.log(templateVars.user);
+  
+  res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
