@@ -148,7 +148,7 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
   const newShortUrl = generateRandomString(0, urlDatabase);
-  urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.session.user_id };
+  urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.session.user_id, numberOfVisits: 0 };
   res.redirect(`/urls/${newShortUrl}`);
 });
 
@@ -158,6 +158,7 @@ app.get("/u/:shortURL", (req, res) => {
     res.statusCode = 400;
     return res.send("The page you have requested does not exist. Please check to make sure you've entered the correct Tiny URL and try again :)");
   } else {
+    urlDatabase[req.params.shortURL].numberOfVisits += 1;
     res.redirect(urlDatabase[req.params.shortURL].longURL);
   }
 });
