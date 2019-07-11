@@ -11,7 +11,8 @@
   <!-- Display current url short and long form -->
   <div class="card text-center">
       <div class="card-header"></div>
-      <div class="card-body">
+      <div class="card-body" >
+        <h4 class="card-title" style="color: #28a745">Your Tiny URL</h4>
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
       </div>
@@ -20,8 +21,8 @@
 
   <!-- Edit current existing url  -->
   <div class="card text-center">
-      <div class="card-body">
-        <h4 class="card-title">Edit</h4>
+      <div class="card-body" >
+        <h4 class="card-title" style="color: #28a745">Edit</h4>
         <form class=" text-center" action="/urls/<%= shortURL %>/edit/?_method=PUT" method="POST">
           <div class="form-group mb-2" style="display: flex; flex-direction: row; justify-content: center; align-items: center">
             <label style="margin: 0" for="longURL">Enter a URL:</label>
@@ -35,8 +36,8 @@
 
   <!-- Analytics for existing url -->
   <div class="card text-center">
-    <div class="card-body">
-      <h4 class="card-title">Your Tiny URL Analytics</h4>
+    <div class="card-body" >
+      <h4 class="card-title" style="color: #28a745">Your Tiny URL Analytics</h4>
       <div class="form-group mb-2 text-center" style="display: flex; flex-direction: row; justify-content: center; align-items: center">
         <h5>Number of visits to your Tiny URL: <%= numberOfVisits %></h5>
       </div>
