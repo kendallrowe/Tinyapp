@@ -67,7 +67,6 @@ const validateUser = function(userID, shortURL, database) {
 };
 
 const dateFormat = function(dt) {
-  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  return  `${monthNames[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()} - ${dt.getHours()}:${dt.getMinutes()}.${dt.getSeconds()}`;
+  return  `${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()} ${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
 };
 module.exports = { newUser, newVisitor, generateRandomString, getUserByEmail, urlsForUser, validateUser, dateFormat };
