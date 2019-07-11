@@ -29,9 +29,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  if (req.session.user_id) {
+  if (users[req.session.user_id]) {
     res.redirect("/urls");
   } else {
+    req.session.user_id = null;
     let templateVars = {
       user: users[req.session.user_id]
     };
@@ -55,7 +56,6 @@ app.post("/register", (req, res) => {
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password,10)
     };
-
     // After adding user, set user_id cookie with ID
     req.session.user_id = userID;
   }
@@ -64,9 +64,10 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  if (req.session.user_id) {
+  if (users[req.session.user_id]) {
     res.redirect("/urls");
   } else {
+    req.session.user_id = null;
     let templateVars = {
       user: users[req.session.user_id]
     };
@@ -102,7 +103,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/urls", (req, res) => {
   // Authenticate that user is logged in
-  if (!req.session.user_id) {
+  if (!users[req.session.user_id]) {
     res.redirect("/login");
   } else {
     // If logged in, render main page
@@ -127,7 +128,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  if (!req.session.user_id) {
+  if (!users[req.session.user_id]) {
     res.statusCode = 403;
     return res.send("Make sure you log in or register to be able to start creating your own Tiny URL's!");
   } else if (!validateUser(req.session.user_id, req.params.shortURL, urlDatabase)) {
@@ -153,8 +154,12 @@ app.post("/urls", (req, res) => {
 
 // Redirection for shortURL to access a long URL
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL].longURL;
-  res.redirect(longURL);
+  if (!urlDatabase[req.params.shortURL]) {
+    res.statusCode = 400;
+    return res.send("The page you have requested does not exist. Please check to make sure you've entered the correct Tiny URL and try again :)");
+  } else {
+    res.redirect(urlDatabase[req.params.shortURL].longURL);
+  }
 });
 
 // Redirect from index home page to allow for view and edit of URL
@@ -164,7 +169,10 @@ app.post("/urls/:shortURL", (req, res) => {
 
 // Edit an existing longURL/ShortURL pair to update longURL
 app.put("/urls/:shortURL/edit/", (req, res) => {
-  if (validateUser(req.session.user_id, req.params.shortURL, urlDatabase)) {
+  if (!users[req.session.user_id]) {
+    res.statusCode = 403;
+    return res.send("Make sure you log in or register to be able to start creating your own Tiny URL's!");
+  } else if (validateUser(req.session.user_id, req.params.shortURL, urlDatabase)) {
     res.statusCode = 200;
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
 
@@ -176,7 +184,7 @@ app.put("/urls/:shortURL/edit/", (req, res) => {
 });
 
 app.delete("/urls/:shortURL/delete/", (req, res) => {
-  if (!req.session.user_id) {
+  if (!users[req.session.user_id]) {
     res.statusCode = 403;
     return res.send("Make sure you log in or register to be able to start creating your own Tiny URL's!");
   } else if (!validateUser(req.session.user_id, req.params.shortURL, urlDatabase)) {

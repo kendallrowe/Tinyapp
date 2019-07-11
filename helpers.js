@@ -27,7 +27,6 @@ const createUserClosure = function() {
 
 const newUser = createUserClosure();
 
-// Returns user given an email address if user already exists in database
 const getUserByEmail = function(email, database) {
   for (let user in database) {
     if (database[user].email === email) {
