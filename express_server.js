@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const methodOverride = require('method-override')
 const cookieSession = require('cookie-session');
-const { urlDatabase, users } = require("./constants");
+const { urlDatabase, users, visitors } = require("./constants");
 const { newUser, newVisitor, generateRandomString, getUserByEmail, urlsForUser, validateUser, dateFormat } = require("./helpers");
 
 const app = express();
@@ -161,20 +161,21 @@ app.get("/u/:shortURL", (req, res) => {
     return res.send("The page you have requested does not exist. Please check to make sure you've entered the correct Tiny URL and try again :)");
   } else if (visitor) {
     visitor.numberOfVisits += 1;
+    console.log(visitor);
   } else {
     req.session.visitor_id = newVisitor(urlDatabase);
     visitors.push({ 
       id: req.session.visitor_id,
       numberOfVisits: 1
     });
-    
+
     urlDatabase[req.params.shortURL].uniqueVisitors.push({ 
       visitorID: req.session.visitor_id, 
       timeStamp: dateFormat(new Date())
     });
+  }
     urlDatabase[req.params.shortURL].numberOfVisits += 1;
     res.redirect(urlDatabase[req.params.shortURL].longURL);
-  }
 });
 
 // Redirect from index home page to allow for view and edit of URL
