@@ -5,15 +5,21 @@ const { getUserByEmail, urlsForUser, validateUser } = require('../helpers.js');
 const testURLS = {
   "CaCft": {
     longURL: "http://vicandkentietheknot.com/Home/",
-    userID: "userRandomID"
+    userID: "userRandomID",
+    numberOfVisits: 1,
+    uniqueVisitors: ["adsf"]
   },
   "adsf32": {
     longURL: "https://www.lighthouselabs.ca",
-    userID: "userRandomID2"
+    userID: "userRandomID2",
+    numberOfVisits: 0,
+    uniqueVisitors: []
   },
   "ters44": {
     longURL: "https://www.facebook.com/",
-    userID: "userRandomID2"
+    userID: "userRandomID2",
+    numberOfVisits: 5,
+    uniqueVisitors: ["adsf", "adsf", "adsf"]
   }
 };
 
@@ -47,7 +53,18 @@ describe('getUserByEmail', function() {
 describe("urlsForUser", function() {
   it("should return array of correct shortURL and LongURLS in array if user has multiple urls on site", function() {
     const user = urlsForUser("userRandomID2", testURLS);
-    const expectedOutput = [{shortURL: "adsf32", longURL: "https://www.lighthouselabs.ca"}, {shortURL: "ters44", longURL: "https://www.facebook.com/"}];
+    const expectedOutput = [{
+      shortURL: "adsf32", 
+      longURL: "https://www.lighthouselabs.ca",
+      numberOfVisits: 0,
+      uniqueVisitors: []
+    }, 
+    {
+      shortURL: "ters44", 
+      longURL: "https://www.facebook.com/",
+      numberOfVisits: 5,
+      uniqueVisitors: ["adsf", "adsf", "adsf"]
+    }];
     assert.deepEqual(user, expectedOutput);
   });
 

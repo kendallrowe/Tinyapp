@@ -107,7 +107,6 @@ app.get("/urls", (req, res) => {
     user: users[req.session.user_id],
     urls: urlsForUser(req.session.user_id, urlDatabase)
   };
-  
   res.render("urls_index", templateVars);
 });
 
