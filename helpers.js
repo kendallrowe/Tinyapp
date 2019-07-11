@@ -17,15 +17,16 @@ const generateRandomString = function(n, database) {
 };
 
 // Closure function used to generate increasing numbered random ID's for users
-const createUserClosure = function() {
+const createLabelClosure = function(type) {
   let userNum = 0;
   return function(database) {
     userNum += 1;
-    return `user-${userNum}${generateRandomString(0, database)}`;
+    return `${type}-${userNum}${generateRandomString(0, database)}`;
   };
 };
 
-const newUser = createUserClosure();
+const newUser = createLabelClosure("user");
+const newVistor = createLabelClosure("visitor")
 
 const getUserByEmail = function(email, database) {
   for (let user in database) {
@@ -65,4 +66,4 @@ const validateUser = function(userID, shortURL, database) {
   return false;
 };
 
-module.exports = { newUser, generateRandomString, getUserByEmail, urlsForUser, validateUser };
+module.exports = { newUser, newVistor, generateRandomString, getUserByEmail, urlsForUser, validateUser };
