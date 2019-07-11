@@ -4,4 +4,4 @@ const users = {};
 
 const visitors = [];
 
-module.exports = { urlDatabase, users };
+module.exports = { urlDatabase, users, visitors };
