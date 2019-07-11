@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const methodOverride = require('method-override')
 const cookieSession = require('cookie-session');
 const { urlDatabase, users } = require("./constants");
-const { newUser, newVistor, generateRandomString, getUserByEmail, urlsForUser, validateUser } = require("./helpers");
+const { newUser, newVisitor, generateRandomString, getUserByEmail, urlsForUser, validateUser, dateFormat } = require("./helpers");
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -144,7 +144,12 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   res.statusCode = 200;
   const newShortUrl = generateRandomString(0, urlDatabase);
-  urlDatabase[newShortUrl] = { longURL: req.body.longURL, userID: req.session.user_id, numberOfVisits: 0 };
+  urlDatabase[newShortUrl] = { 
+    longURL: req.body.longURL, 
+    userID: req.session.user_id, 
+    numberOfVisits: 0, 
+    uniqueVisitors: [] 
+  };
   res.redirect(`/urls/${newShortUrl}`);
 });
 
@@ -153,7 +158,13 @@ app.get("/u/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
     res.statusCode = 400;
     return res.send("The page you have requested does not exist. Please check to make sure you've entered the correct Tiny URL and try again :)");
+  } else if (f=s) {
   } else {
+    req.session.visitor_id = newVisitor(urlDatabase);
+    urlDatabase[req.params.shortURL].uniqueVisitors.push({ 
+      visitorID: req.session.visitor_id, 
+      timeStamp: dateFormat(new Date())
+    });
     urlDatabase[req.params.shortURL].numberOfVisits += 1;
     res.redirect(urlDatabase[req.params.shortURL].longURL);
   }
